@@ -1,0 +1,47 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #A3968F;
+    height: 100%;
+    vertical-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+li {
+    float: left;
+    padding-bottom: 1vh;
+}
+.left {
+    float: left;
+    font-family: "Georgia", Times, serif;
+    font-size: large;
+}
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: center;
+    padding-top: 1.5em;
+    padding-left: 6vw;
+    padding-right: 6vw;
+    color: #FAF1E1;
+}
+
+li a:hover {
+    background-color: white;
+    color: black;
+    padding-top: 1.25em;
+    border-top: 0.375em solid #333;
+}
+
+img {
+    height: 5vh;
+    weight: 5vw;
+}
+img a {
+
+}
