@@ -23,17 +23,17 @@ const NavigationAuth = ({ authUser }) => (
     <center>
         <ul className="navbar">
             <li className="navbar">
-                <Link to={ROUTES.LANDING}>
+                <Link to={ROUTES.HOME}>
                     <img className="navbar" src={require('./img/icon1.png')} alt=""/>
                 </Link>
             </li>
             <li className="navbar">
-                <Link to={ROUTES.ACCOUNT}>
+                <Link to={ROUTES.LANDING}>
                     <img className="navbar" src={require('./img/icon2.png')} alt=""/>
                 </Link>
             </li>
             <li className="navbar">
-                <Link to={ROUTES.HOME}>
+                <Link to={ROUTES.LANDING}>
                     <img className="navbar" src={require('./img/icon3.png')} alt=""/>
                 </Link>
             </li>

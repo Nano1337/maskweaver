@@ -44,3 +44,41 @@ img.navbar {
     height: 5vh;
     weight: 5vw;
 }
+
+.colorheader {
+    color: #5E5560;
+}
+
+.page {
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+}
+
+input {
+    padding: 5px 5px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: none;
+    width: 16.5em;
+    transition: width 0.4s ease-in-out;
+    border-bottom: 2px solid gray;
+    margin-bottom: 2em;
+}
+  
+input:focus {
+width: 20em;
+border-bottom: 2px solid #5E5560;
+}
+
+button {
+    background-color: #5E5560;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 10px 10px 10px 10px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}

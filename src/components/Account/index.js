@@ -6,18 +6,33 @@ import PasswordChangeForm from '../PasswordChange';
 import SignOutButton from "../SignOut";
 
 const AccountPage = () => (
-    <div>
+    <div className = "page">
         <AuthUserContext.Consumer>
             {authUser => (
                 <div>
-                    <h1>Account: {authUser.email}</h1>
-                    <PasswordForgetForm />
-                    <PasswordChangeForm />
+                    <div className="colorheader">
+                        <center>
+                            <h1>Account</h1>
+                            <h3>{authUser.email}</h3>
+                            <center>
+                                <SignOutButton />
+                            </center>
+                        </center>
+                    </div>   
+                    <br /><br /><hr /><br /><br />
+                    <center>
+                        <div className="colorheader">
+                            <h2>Change Password</h2>
+                        </div>
+                        
+                        <PasswordChangeForm />
+                    </center>                 
+                    
                 </div>
             )}
         </AuthUserContext.Consumer>
         <p></p>
-        <SignOutButton />
+       
     </div>
 
 );
