@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { withAuthorization } from '../Session';
+
 class Landing extends React.Component {
     constructor(props) {
         super(props);
@@ -7,14 +9,39 @@ class Landing extends React.Component {
             value: '',
         }
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.getFriends = this.getFriends.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {    this.setState({value: event.target.value});  }
 
-    handleSubmit(event) { //TODO: adds the friend, both locally and on the backend, and then displays and re renders
+    // handleSubmit(event) { 
         
-        event.preventDefault();
+    //     event.preventDefault();
+    // }
+
+    addCourse = (nameOfCourse) => { //TODO: ACTUALLY ADD THE COURSE. this here is copied straight from modulus
+        var newCourses = this.state.arrCourses.slice();
+        newCourses.push(nameOfCourse);
+        this.setState({
+            arrCourses: newCourses.slice(),
+        }, () => {this.changeActiveCourse(nameOfCourse);});
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        console.log(Object.values(usr).slice()[2]);
+        localStorage.setItem('authUser', JSON.stringify(usr));
+        console.log(Object.values(usr).slice()[2]);
+        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+            courses: newCourses.slice(),
+        });
+    }
+
+    getFriends() { 
+        //TODO: RETURN AN ARRAY OF FRIEND OBJECTS FROM THE DATABASE FOR THE CURRENT USER
+        //to help, use something similar to lines 48-49 to get current user username/uid or whatever
+        //in the output, each object should contain a name, which corresponds to a string, and a pointCount, which corresponds to an int
+        //{ name: "Bob", pointCount: 15 }
+        //the return statement below is just dummy code. pls remove
+        return [{ name: "Bob", pointCount: 0 }, { name: "Derek", pointCount: 15 }, { name: "Jessica", pointCount: -3 }, { name: "Bob", pointCount: 0 }, { name: "Bob", pointCount: 0 },];
     }
 
     render() {
@@ -31,20 +58,21 @@ class Landing extends React.Component {
                     <h2>Add a Friend</h2>
                 </div>
                 <center>
-                    <form onSubmit={this.handleSubmit}>
+                    {/* <form onSubmit={this.handleSubmit}>
                         <label>
                             Enter the Friend's ID:<br />
                             <input type="text" value={this.state.value} onChange={this.handleChange} />
                         </label>
                         <br />
                         <input className = "nicesubmit" type="submit" value="Submit" />
-                    </form>
+                    </form> */}
+                    <NameForm addCourse={this.addCourse}/>
                 </center>
                 <hr />
                 <div className="colorheader">
                     <h2>Friend Activity</h2>
                 </div>
-                {getFriends().slice().map(
+                {this.getFriends().slice().map(
                     friend =>
                     <Friend 
                         name={friend.name}
@@ -57,10 +85,48 @@ class Landing extends React.Component {
     }
 }
 
-function getFriends() { //TODO: RETURN AN ARRAY OF FRIEND OBJECTS
-    //each object should contain a name, which corresponds to a string, and a pointCount, which corresponds to an int
-    //{ name: "Bob", pointCount: 15 }
-    return [{ name: "Bob", pointCount: 0 }, { name: "Derek", pointCount: 15 }, { name: "Jessica", pointCount: -3 }, { name: "Bob", pointCount: 0 }, { name: "Bob", pointCount: 0 },];
+class NameForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: ''};
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {    this.setState({value: event.target.value});  }
+
+    handleSubmit(event) { //plugs into the backend to add the course, and passes the function on up for the main container to do the re-rendering
+        let shouldAddCourse = false;
+
+        //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
+        const allCourses = JSON.parse(localStorage.getItem('courses')); 
+        for (let i = 0, len = allCourses.length; i < len; ++i) {
+            var course = allCourses[i];
+            if (course.CourseName === this.state.value) {
+                shouldAddCourse = true;
+            }
+        }
+
+        if (shouldAddCourse) {
+            this.props.addCourse(this.state.value);
+        } else {
+            alert('Sorry, ID not found');
+        }
+        event.preventDefault();
+    }
+
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    Enter Friend ID below:<br /><br />
+                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                </label>
+                <br /><br />
+                <input className = "nicesubmit" type="submit" value="Submit" />
+            </form>
+        );
+    }
 }
 
 function Friend(props) {
@@ -101,4 +167,6 @@ function Friend(props) {
     );
 }
 
-export default Landing;
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(Landing);
