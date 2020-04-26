@@ -1,6 +1,22 @@
 import React from 'react';
 
 class Landing extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: '',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {    this.setState({value: event.target.value});  }
+
+    handleSubmit(event) { //TODO: adds the friend, both locally and on the backend, and then displays and re renders
+        
+        event.preventDefault();
+    }
+
     render() {
         const usr = JSON.parse(localStorage.getItem('authUser')); // user's personal data is stored in 'authUser'
         var username = Object.values(usr).slice()[6];
@@ -9,6 +25,24 @@ class Landing extends React.Component {
             <div>
                 <div className="colorheader">
                     <h1>Friends</h1>
+                </div>
+                <hr />
+                <div className="colorheader">
+                    <h2>Add a Friend</h2>
+                </div>
+                <center>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>
+                            Enter the Friend's ID:<br />
+                            <input type="text" value={this.state.value} onChange={this.handleChange} />
+                        </label>
+                        <br />
+                        <input className = "nicesubmit" type="submit" value="Submit" />
+                    </form>
+                </center>
+                <hr />
+                <div className="colorheader">
+                    <h2>Friend Activity</h2>
                 </div>
                 {getFriends().slice().map(
                     friend =>
