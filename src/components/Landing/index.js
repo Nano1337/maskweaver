@@ -27,11 +27,11 @@ class Landing extends React.Component {
             arrCourses: newCourses.slice(),
         }, () => {this.changeActiveCourse(nameOfCourse);});
         const usr = JSON.parse(localStorage.getItem('authUser'));
-        console.log(Object.values(usr).slice()[2]);
+        // console.log(Object.values(usr).slice()[2]);
         localStorage.setItem('authUser', JSON.stringify(usr));
-        console.log(Object.values(usr).slice()[2]);
+        // console.log(Object.values(usr).slice()[2]);
         this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
-            courses: newCourses.slice(),
+            friends: newCourses.slice(),
         });
     }
 
@@ -99,10 +99,22 @@ class NameForm extends React.Component {
         let shouldAddCourse = false;
 
         //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
-        const allCourses = JSON.parse(localStorage.getItem('courses')); 
+        var allCourses;
+        this.props.firebase.users().on('value', snapshot => {
+            const userObject = snapshot.val();
+            const userList = Object.keys(userObject).map(key => ({
+                ...userObject[key],
+                uid: key,
+            }));
+
+            for (var i = 0; i < userList.length; i++) {
+                var curUser = userList[i];
+                allCourses.push(curUser.uid);
+            }
+        });
         for (let i = 0, len = allCourses.length; i < len; ++i) {
             var course = allCourses[i];
-            if (course.CourseName === this.state.value) {
+            if (course.uid === this.state.value) {
                 shouldAddCourse = true;
             }
         }
