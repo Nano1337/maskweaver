@@ -10,6 +10,7 @@ class Landing extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.getFriends = this.getFriends.bind(this);
+        this.addCourse = this.addCourse.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -20,7 +21,9 @@ class Landing extends React.Component {
     //     event.preventDefault();
     // }
 
-    addCourse = (nameOfCourse) => { //Writes correctly, albeit infinitely
+    addCourse(nameOfCourse) { //Writes correctly, albeit infinitely
+        console.log('hi');
+        
         const usr = JSON.parse(localStorage.getItem('authUser'));
         var newCourses = Object.values(usr).slice()[2];
         newCourses.push(nameOfCourse);
