@@ -100,46 +100,46 @@ class Interactions extends React.Component {
         //Below is image rendering, don't touch
 
         const image = this.state.image;
+if ( image !== null) {
+    const uploadTask = this.props.firebase.storage.ref(`images/${image.name}`).put(image); // uploads image to firebase
+    uploadTask.on('state_changed',
+        (snapshot) => { // stores
+            const progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            this.setState({progress}); // gives a number between 1-100 for percent done uploading
+        },
+        (error) => {
+            console.log(error); // if upload errored
+        },
+        () => { // finishes the function here, adds the url
+            // get the uploaded image url back
 
-        const uploadTask = this.props.firebase.storage.ref(`images/${image.name}`).put(image); // uploads image to firebase
-        uploadTask.on('state_changed',
-            (snapshot) => { // stores
-                const progress = Math.floor((snapshot.bytesTransferred/snapshot.totalBytes)*100);
-                this.setState({progress}); // gives a number between 1-100 for percent done uploading
-            } ,
-            (error) => {
-                console.log(error); // if upload errored
-            },
-            () => { // finishes the function here, adds the url
-                // get the uploaded image url back
-
-                const link = uploadTask.snapshot.ref.getDownloadURL().then( url => {
-                    console.log(url);
-                    if (!(this.state.photos.includes(url))) {
-                        var newArray = this.state.photos.slice();
-                        newArray.push(url);
-                        this.setState({
-                            photos: newArray,
-                        });
-                    }
-                    const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
-                    newPhotos.push(url); // adds the url of the photo to be associated with the user
-                    console.log(url);
-                    if (!(this.state.photos.includes(url))) {
-                        var newArray = this.state.photos.slice();
-                        newArray.push(url);
-                        this.setState({
-                            photos: newArray,
-                        });
-                    }
-                    const usr = JSON.parse(localStorage.getItem('authUser'));
-                    this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
-                        photos: newPhotos.slice(),
+            const link = uploadTask.snapshot.ref.getDownloadURL().then(url => {
+                console.log(url);
+                if (!(this.state.photos.includes(url))) {
+                    var newArray = this.state.photos.slice();
+                    newArray.push(url);
+                    this.setState({
+                        photos: newArray,
                     });
-                    this.render();
+                }
+                const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
+                newPhotos.push(url); // adds the url of the photo to be associated with the user
+                console.log(url);
+                if (!(this.state.photos.includes(url))) {
+                    var newArray = this.state.photos.slice();
+                    newArray.push(url);
+                    this.setState({
+                        photos: newArray,
+                    });
+                }
+                const usr = JSON.parse(localStorage.getItem('authUser'));
+                this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+                    photos: newPhotos.slice(),
                 });
+                this.render();
+            });
         });
-
+}
         window.location.reload();
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 
