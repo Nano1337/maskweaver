@@ -62,6 +62,7 @@ class Interactions extends React.Component {
             image: null, // image reference
             url: '', // database url
             progress: 0, // progress of upload
+            photos: [],
         }
     }
 
@@ -69,7 +70,6 @@ class Interactions extends React.Component {
         const image = e.target.files[0];
         this.setState({image});
         console.log(this.state.username); // sets the state to include the current file upon adding one
-
     }
 
     handleUpload = e => {
@@ -78,7 +78,7 @@ class Interactions extends React.Component {
         const uploadTask = this.props.firebase.storage.ref(`images/${image.name}`).put(image); // uploads image to firebase
         uploadTask.on('state_changed',
             (snapshot) => { // stores
-                const progress = Math.round((snapshot.bytesTransferred/snapshot.totalBytes)*100);
+                const progress = Math.floor((snapshot.bytesTransferred/snapshot.totalBytes)*100);
                 this.setState({progress}); // gives a number between 1-100 for percent done uploading
             } ,
             (error) => {
@@ -89,18 +89,37 @@ class Interactions extends React.Component {
 
                 const link = uploadTask.snapshot.ref.getDownloadURL().then( url => {
                     console.log(url);
+                    if (!(this.state.photos.includes(url))) {
+                        var newArray = this.state.photos.slice();
+                        newArray.push(url);
+                        this.setState({
+                            photos: newArray,
+                        });
+                    }
                     const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
                     newPhotos.push(url); // adds the url of the photo to be associated with the user
                     console.log(url);
+                    if (!(this.state.photos.includes(url))) {
+                        var newArray = this.state.photos.slice();
+                        newArray.push(url);
+                        this.setState({
+                            photos: newArray,
+                        });
+                    }
                     const usr = JSON.parse(localStorage.getItem('authUser'));
                     this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
                         photos: newPhotos.slice(),
                     });
+                    this.render();
                 });
-            });
+        });
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 
     render () { // file button and upload button
+        //images temporarily display
+        //TODO: setState with updated this.state.photos pulled from remote
+
+        console.log('rendered');
         return (
             <div>
                 <center>
@@ -109,13 +128,17 @@ class Interactions extends React.Component {
                         <input type= "file" onChange={this.handleChange}/>
                     </div>
                     <br />
+                    <progress value = {this.state.progress} max = "100"/> 
+                    <br />
                     <button onClick = {this.handleUpload}>Upload</button>
                     <br />
-                    {/* <progress value = {this.state.progress} max = "100"/> */ /* Don't really need a progress bar do we */}
+                    
                     <br/><br/>
                     <hr />
                     <br/><br/>
-                    <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" /> {/* TODO: How do we get a list of image links and display them?*/}
+                    {/* <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />  */}
+                    {/* TODO: How do we get a list of image links and display them?*/}
+                    {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" height = "300" width = "400" />)}
                     <br/>
                     
                 </center>
