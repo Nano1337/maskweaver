@@ -10,6 +10,7 @@ class Landing extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.getFriends = this.getFriends.bind(this);
+        this.addCourse = this.addCourse.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -20,19 +21,23 @@ class Landing extends React.Component {
     //     event.preventDefault();
     // }
 
-    addCourse = (nameOfCourse) => { //TODO: ACTUALLY ADD THE COURSE. this here is copied straight from modulus
-        var newCourses = this.state.arrCourses.slice();
+    addCourse(nameOfCourse) { //Writes correctly, albeit infinitely
+        console.log('hi');
+
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        var newCourses = Object.values(usr).slice()[2];
         newCourses.push(nameOfCourse);
+        console.log(newCourses);
         this.setState({
             arrCourses: newCourses.slice(),
-        }, () => {this.changeActiveCourse(nameOfCourse);});
-        const usr = JSON.parse(localStorage.getItem('authUser'));
-        console.log(Object.values(usr).slice()[2]);
-        localStorage.setItem('authUser', JSON.stringify(usr));
-        console.log(Object.values(usr).slice()[2]);
-        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
-            courses: newCourses.slice(),
         });
+
+        // console.log(Object.values(usr).slice()[2]);
+        localStorage.setItem('authUser', JSON.stringify(usr));
+        // console.log(Object.values(usr).slice()[2]);
+        // this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+        //     friends: newCourses.slice(),
+        // });
     }
 
     getFriends() { 
@@ -66,7 +71,7 @@ class Landing extends React.Component {
                         <br />
                         <input className = "nicesubmit" type="submit" value="Submit" />
                     </form> */}
-                    <NameForm addCourse={this.addCourse}/>
+                    <NameForm addCourse={this.addCourse} firebase = {this.props.firebase}/>
                 </center>
                 <hr />
                 <div className="colorheader">
@@ -95,23 +100,8 @@ class NameForm extends React.Component {
 
     handleChange(event) {    this.setState({value: event.target.value});  }
 
-    handleSubmit(event) { //plugs into the backend to add the course, and passes the function on up for the main container to do the re-rendering
-        let shouldAddCourse = false;
-
-        //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
-        const allCourses = JSON.parse(localStorage.getItem('courses')); 
-        for (let i = 0, len = allCourses.length; i < len; ++i) {
-            var course = allCourses[i];
-            if (course.CourseName === this.state.value) {
-                shouldAddCourse = true;
-            }
-        }
-
-        if (shouldAddCourse) {
-            this.props.addCourse(this.state.value);
-        } else {
-            alert('Sorry, ID not found');
-        }
+    handleSubmit(event) { 
+        this.props.addCourse(this.state.value);
         event.preventDefault();
     }
 
