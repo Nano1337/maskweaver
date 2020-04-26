@@ -69,6 +69,7 @@ class Interactions extends React.Component {
         const image = e.target.files[0];
         this.setState({image});
         console.log(this.state.username); // sets the state to include the current file upon adding one
+
     }
 
     handleUpload = e => {
@@ -84,13 +85,18 @@ class Interactions extends React.Component {
                 console.log(error); // if upload errored
             },
             () => { // finishes the function here, adds the url
-                const url = this.props.firebase.storage.ref('images').child(image.name).getDownloadURL();
-                this.setState({url});
-                const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
-                newPhotos.push(this.state.url); // adds the url of the photo to be associated with the user
-                // this.props.firebase.users().child(Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[0]).update({
-                //     photos: newPhotos.slice(),
-                // }); // updates the realtime firebase: TODO: This errors I needa fix it. The file correctly uploads though.
+                // get the uploaded image url back
+
+                const link = uploadTask.snapshot.ref.getDownloadURL().then( url => {
+                    console.log(url);
+                    const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
+                    newPhotos.push(url); // adds the url of the photo to be associated with the user
+                    console.log(url);
+                    const usr = JSON.parse(localStorage.getItem('authUser'));
+                    this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+                        photos: newPhotos.slice(),
+                    });
+                });
             });
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 
@@ -109,7 +115,7 @@ class Interactions extends React.Component {
                     <br/><br/>
                     <hr />
                     <br/><br/>
-                    <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />
+                    <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" /> {/* TODO: How do we get a list of image links and display them?*/}
                     <br/>
                     
                 </center>
