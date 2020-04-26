@@ -78,7 +78,13 @@ class Interactions extends React.Component {
         //TODO: upload this.state.numOfMasks (int) as points, and this.state.checkBoxValue (boolean) indicates whether the "donated" box is checked (if the masks have already been donated, we should use that as like a points multipler)
         //to help, this.props.name should store the current username, this.props.firebase should let you access firebase.
         // this.props.points should theoretically count the current number of points, but i literally don't touch it at all so its probably best not to use it and instead use the database point counter entirely
-
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        var newPoints = parseInt(Object.values(usr).slice()[4]);
+        console.log(newPoints);
+        newPoints += Number(this.state.numOfMasks);
+        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+            points: newPoints,
+        });
         //Below is image rendering, don't touch
 
         const image = this.state.image;
