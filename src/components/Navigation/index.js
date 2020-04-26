@@ -28,7 +28,7 @@ const NavigationAuth = ({ authUser }) => (
                 </Link>
             </li>
             <li className="navbar">
-                <Link to={ROUTES.LANDING}>
+                <Link to={ROUTES.INSTRUCTIONS}>
                     <img className="navbar" src={require('./img/icon2.png')} alt=""/>
                 </Link>
             </li>
