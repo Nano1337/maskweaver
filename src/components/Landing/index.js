@@ -23,7 +23,7 @@ class Landing extends React.Component {
 
     addCourse(nameOfCourse) { //Writes correctly, albeit infinitely
         console.log('hi');
-        
+
         const usr = JSON.parse(localStorage.getItem('authUser'));
         var newCourses = Object.values(usr).slice()[2];
         newCourses.push(nameOfCourse);
@@ -101,32 +101,35 @@ class NameForm extends React.Component {
     handleChange(event) {    this.setState({value: event.target.value});  }
 
     handleSubmit(event) { //plugs into the backend to add the course, and passes the function on up for the main container to do the re-rendering
-        let shouldAddCourse = false;
+        let shouldAddCourse = true;
+        // var allEntries;
 
-        //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
-        this.props.firebase.users().on('value', snapshot => {
-            const userObject = snapshot.val();
-            const userList = Object.keys(userObject).map(key => ({
-                ...userObject[key],
-                uid: key,
-            }));
-            localStorage.setItem('users', JSON.stringify(userList));
-            var allEntries = JSON.parse(localStorage.getItem('users'));
+        // //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
+        // this.props.firebase.users().on('value', snapshot => {
+        //     const userObject = snapshot.val();
+        //     const userList = Object.keys(userObject).map(key => ({
+        //         ...userObject[key],
+        //         uid: key,
+        //     }));
+        //     localStorage.setItem('users', JSON.stringify(userList));
+        //     var allEntries = JSON.parse(localStorage.getItem('users'));
 
-            for (let i = 0, len = allEntries.length; i < len; ++i) {
-                var course = allEntries[i];
-                if (course.uid === this.state.value) {
-                    shouldAddCourse = true;
-                    console.log("yeah");
-                }
-            }
+            
+        // });
 
-            if (shouldAddCourse) {
-                this.props.addCourse(this.state.value);
-            } else {
-                alert('Sorry, ID not found');
-            }
-        });
+        // for (let i = 0, len = allEntries.length; i < len; ++i) {
+        //     var course = allEntries[i];
+        //     if (course.uid === this.state.value) {
+        //         shouldAddCourse = true;
+        //         console.log("yeah");
+        //     }
+        // }
+
+        if (shouldAddCourse) {
+            this.props.addCourse(this.state.value);
+        } else {
+            alert('Sorry, ID not found');
+        }
         event.preventDefault();
     }
 
