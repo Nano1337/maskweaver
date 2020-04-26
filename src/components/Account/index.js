@@ -13,6 +13,7 @@ const AccountPage = () => (
                     <div className="colorheader">
                             <h1>Account</h1>
                             <h3>{authUser.email}</h3>
+                            <h5>ID: {authUser.uid}</h5>
                             <SignOutButton />
                     </div>   
                     <br /><br /><hr /><br />

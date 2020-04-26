@@ -29,11 +29,10 @@ class Home extends React.Component {
                 email: Object.values(usr).slice()[1],
                 photos: Object.values(usr).slice()[2],
                 friends: Object.values(usr).slice()[3],
-                points: Object.values(usr).slice()[4]
-
+                points: Object.values(usr).slice()[4],
+                uid: Object.values(usr).slice()[4],
             });
         });
-
     }
 
     render() {
