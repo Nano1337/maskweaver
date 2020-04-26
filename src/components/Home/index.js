@@ -33,6 +33,14 @@ class Home extends React.Component {
                 uid: Object.values(usr).slice()[4],
             });
         });
+        this.props.firebase.users().on('value', snapshot => {
+            const userObject = snapshot.val();
+            const userList = Object.keys(userObject).map(key => ({
+                ...userObject[key],
+                uid: key,
+            }));
+            localStorage.setItem('users', JSON.stringify(userList));
+        });
     }
 
     render() {

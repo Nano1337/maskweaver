@@ -27,7 +27,7 @@ class Landing extends React.Component {
         const usr = JSON.parse(localStorage.getItem('authUser'));
         var newCourses = Object.values(usr).slice()[2];
         newCourses.push(nameOfCourse);
-        console.log(newCourses);
+
         this.setState({
             arrCourses: newCourses.slice(),
         });
@@ -35,18 +35,49 @@ class Landing extends React.Component {
         // console.log(Object.values(usr).slice()[2]);
         localStorage.setItem('authUser', JSON.stringify(usr));
         // console.log(Object.values(usr).slice()[2]);
-        // this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
-        //     friends: newCourses.slice(),
-        // });
+        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+            friends: newCourses.slice(),
+        });
     }
 
     getFriends() { 
-        //TODO: RETURN AN ARRAY OF FRIEND OBJECTS FROM THE DATABASE FOR THE CURRENT USER
+
         //to help, use something similar to lines 48-49 to get current user username/uid or whatever
         //in the output, each object should contain a name, which corresponds to a string, and a pointCount, which corresponds to an int
         //{ name: "Bob", pointCount: 15 }
         //the return statement below is just dummy code. pls remove
-        return [{ name: "Bob", pointCount: 0 }, { name: "Derek", pointCount: 15 }, { name: "Jessica", pointCount: -3 }, { name: "Bob", pointCount: 0 }, { name: "Bob", pointCount: 0 },];
+
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        const usrList = Object.values(usr).slice()[2];
+        const arrFriends = [];
+        for (var i = 0; i < usrList.length; i++) {
+            arrFriends.push({
+                name: "",
+                pointCount: 0
+            });
+        }
+        const allUsers = JSON.parse(localStorage.getItem('users'));
+        for ( var i = 1; i < usrList.length; i++) {
+            for ( var j = 0; j < allUsers.length; j++) {
+                if (usrList[i] == null) {}
+
+                else {
+                    const curFriend = usrList[i];
+                    const curUser = allUsers[j];
+                    if ( curUser.uid === curFriend) {
+                        const friendUSer = Object.values(curUser.username);
+                        const friendPts = Object.values(curUser.points);
+                        console.log(friendPts);
+                        console.log(friendUSer);
+                        arrFriends[i].name = friendUSer.join("");
+                        arrFriends[i].pointCount = curUser.points;
+                    }
+                }
+
+            }
+        }
+        console.log(arrFriends);
+        return arrFriends; // TODO: filter entries with name as "" (empty string)
     }
 
     render() {
