@@ -8,17 +8,24 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 function AccountPage(props) {
     const [copyMsg, setCopyMsg] = React.useState("tap to copy");
-
+    
     return (
         <div className = "page">
             <AuthUserContext.Consumer>
                 {authUser => (
                     <div>
                         <div className="colorheader">
-                                <h1>Account</h1>
-                                <h3>{authUser.email}</h3>
-                                <h3>Points: {/* TODO: put points here, maybe call for authUser?? */}</h3>
                                 
+                                
+
+                                <CopyToClipboard text={authUser.uid} onCopy={() => window.location.reload()}>
+                                    <div>
+                                        <h1>Account</h1>
+                                        <p>(Refresh &#8634;)</p>
+                                    </div>
+                                </CopyToClipboard>
+                                <h3>{authUser.email}</h3>
+                                <h2>Points: {authUser.points}</h2>
                                 <CopyToClipboard text={authUser.uid} onCopy={() => setCopyMsg("Copied")}>
                                     <div>
                                         <span><b>Your ID </b>({copyMsg}):</span><br />

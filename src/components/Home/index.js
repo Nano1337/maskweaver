@@ -75,13 +75,17 @@ class Interactions extends React.Component {
     }
 
     handleUpload = e => {
-        //TODO: upload this.state.numOfMasks (int) as points, and this.state.checkBoxValue (boolean) indicates whether the "donated" box is checked (if the masks have already been donated, we should use that as like a points multipler)
+        //upload this.state.numOfMasks (int) as points, and this.state.checkBoxValue (boolean) indicates whether the "donated" box is checked (if the masks have already been donated, we should use that as like a points multipler)
         //to help, this.props.name should store the current username, this.props.firebase should let you access firebase.
         // this.props.points should theoretically count the current number of points, but i literally don't touch it at all so its probably best not to use it and instead use the database point counter entirely
         const usr = JSON.parse(localStorage.getItem('authUser'));
         var newPoints = parseInt(Object.values(usr).slice()[4]);
-        console.log(newPoints);
+        console.log('I have ' + newPoints);
         newPoints += Number(this.state.numOfMasks);
+        if (this.state.checkBoxValue) {
+            newPoints += Number(this.state.numOfMasks);
+        }
+        console.log('Now I have ' + newPoints);
         this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
             points: newPoints,
         });
@@ -127,6 +131,8 @@ class Interactions extends React.Component {
                     this.render();
                 });
         });
+
+        window.location.reload();
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 
     masksOnChange = event => {
@@ -139,7 +145,7 @@ class Interactions extends React.Component {
 
     render () { // file button and upload button
         //images temporarily display
-        const { numOfMasks, checked } = this.state;
+        const { numOfMasks, checkBoxValue } = this.state;
         console.log('rendered');
         return (
             <div>
@@ -170,7 +176,7 @@ class Interactions extends React.Component {
                     <hr />
                     <br/>
                     {/* <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />  */}
-                    <center>Image Preview</center><br />
+                    <center>Your Photo</center><br />
                     <center>
                         {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" width = "90%" />)}
                     </center>
