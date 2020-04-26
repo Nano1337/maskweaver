@@ -124,6 +124,7 @@ class SignUpFormBase extends Component {
                     type="password"
                     placeholder="Confirm Password"
                 />
+                <p></p>
                 <label>
                     Admin:
                     <input
