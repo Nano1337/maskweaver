@@ -86,16 +86,25 @@ class Interactions extends React.Component {
             () => { // finishes the function here, adds the url
                 // get the uploaded image url back
 
-                const link = uploadTask.snapshot.ref.getDownloadURL().then( url => {
-                    console.log(url);
+                    uploadTask.snapshot.ref.getDownloadURL().then( url => {
                     const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
                     newPhotos.push(url); // adds the url of the photo to be associated with the user
-                    console.log(url);
+                    console.log(newPhotos);
                     const usr = JSON.parse(localStorage.getItem('authUser'));
                     this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
                         photos: newPhotos.slice(),
                     });
+                        this.props.firebase.users().on('value', snapshot => {
+                            const usersObject = snapshot.val();
+                            const usersList = Object.keys(usersObject).map(key => ({
+                                ...usersObject[key],
+                                uid: key,
+                            }));
+                            localStorage.setItem('authUser', usersList[Object.values(usr).slice()[0]]);
+                        });
+
                 });
+
             });
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 

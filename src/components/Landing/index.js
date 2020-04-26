@@ -12,8 +12,17 @@ class Landing extends React.Component {
 
     handleChange(event) {    this.setState({value: event.target.value});  }
 
-    handleSubmit(event) { //TODO: adds the friend, both locally and on the backend, and then displays and re renders
-        
+    handleSubmit(event) {
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        const friendsList = Object.values(usr).slice()[3];
+        console.log(this.state.value);
+        if (this.state.value === Object.values(usr).slice()[0])
+            console.log("You are not friends with yourself"); // TODO: Display you can't add yourself!
+        const friend = this.props.firebase.users().child(event.target.value).username;
+        friendsList.push(friend);
+        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+            friends: friendsList.splice(),
+        });
         event.preventDefault();
     }
 
@@ -31,7 +40,7 @@ class Landing extends React.Component {
                     <h2>Add a Friend</h2>
                 </div>
                 <center>
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={() => this.handleSubmit()}>
                         <label>
                             Enter the Friend's ID:<br />
                             <input type="text" value={this.state.value} onChange={this.handleChange} />
