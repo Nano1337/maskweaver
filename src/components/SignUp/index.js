@@ -7,8 +7,13 @@ import * as ROLES from '../../constants/roles';
 
 const SignUpPage = () => (
     <div>
-        <h1>SignUp</h1>
-        <SignUpForm />
+        <div className="colorheader">
+            <h1>Sign Up</h1>
+        </div>
+        <center>
+            <SignUpForm />
+        </center>
+        
     </div>
 );
 
@@ -102,36 +107,37 @@ class SignUpFormBase extends Component {
                     onChange={this.onChange}
                     type="text"
                     placeholder="Full Name"
-                />
+                /><br />
                 <input
                     name="email"
                     value={email}
                     onChange={this.onChange}
                     type="text"
                     placeholder="Email Address"
-                />
+                /><br />
                 <input
                     name="passwordOne"
                     value={passwordOne}
                     onChange={this.onChange}
                     type="password"
                     placeholder="Password"
-                />
+                /><br />
                 <input
                     name="passwordTwo"
                     value={passwordTwo}
                     onChange={this.onChange}
                     type="password"
                     placeholder="Confirm Password"
-                />
+                /><br />
                 <label>
                     Admin:
                     <input
                         name="isAdmin"
                         type="checkbox"
+                        className="checkboxinput"
                         checked={isAdmin}
                         onChange={this.onChangeCheckbox}
-                    />
+                    /><br />
                 </label>
                 <button disabled={isInvalid} type="submit">
                     Sign Up

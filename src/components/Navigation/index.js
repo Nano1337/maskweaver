@@ -48,7 +48,16 @@ const NavigationAuth = ({ authUser }) => (
 );
 
 const NavigationNonAuth = () => (
-    <p>Sign Up Today!</p>
+    <center>
+        <ul className="navbar">
+            <li className="navbar">
+                <Link to={ROUTES.ACCOUNT}>
+                    <img className="navbar" src={require('./img/icon4.png')} alt=""/>
+                </Link>
+            </li>
+
+        </ul>
+    </center>
 );
 
 export default Navigation;
