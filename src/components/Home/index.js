@@ -181,13 +181,13 @@ class Interactions extends React.Component {
                     <br />
                     
                     <br/><br/>
-                    <hr />
-                    <br/>
+                    {/* <hr />
+                    <br/> */}
                     {/* <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />  */}
-                    <center>Your Photo</center><br />
+                    {/* <center>Your Photo</center><br />
                     <center>
                         {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" width = "90%" />)}
-                    </center>
+                    </center> */}
                     
                     <br/>
                     
