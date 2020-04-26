@@ -120,7 +120,10 @@ class Interactions extends React.Component {
         //TODO: setState with updated this.state.photos pulled from remote
         const usr = JSON.parse(localStorage.getItem('authUser'));
         const arrPhotos = Object.values(this.props.firebase.users().child(Object.values(usr).slice()[0]).photos); // stuff inside parenthesis is the direct value
-        console.log('rendered');
+        this.setState({
+            photos: arrPhotos,
+        });
+
         return (
             <div>
                 <center>
