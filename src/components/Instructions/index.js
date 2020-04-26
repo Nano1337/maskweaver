@@ -2,7 +2,11 @@ import React from 'react';
 
 const Instructions = () => (
     <div>
-        <h1>Instructions</h1>
+        <div className="colorheader">
+            <h1>Instructions</h1>
+            <h3>Making a mask is easy!</h3>
+        </div>
+        
     </div>
 );
 

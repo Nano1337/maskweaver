@@ -11,13 +11,9 @@ const AccountPage = () => (
             {authUser => (
                 <div>
                     <div className="colorheader">
-                        <center>
                             <h1>Account</h1>
                             <h3>{authUser.email}</h3>
-                            <center>
-                                <SignOutButton />
-                            </center>
-                        </center>
+                            <SignOutButton />
                     </div>   
                     <br /><br /><hr /><br /><br />
                     <center>
