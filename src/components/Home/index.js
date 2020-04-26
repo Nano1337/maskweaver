@@ -62,6 +62,9 @@ class Interactions extends React.Component {
             url: '', // database url
             progress: 0, // progress of upload
             photos: [],
+
+            numOfMasks: 0,
+            checkBoxValue: false,
         }
     }
 
@@ -72,6 +75,12 @@ class Interactions extends React.Component {
     }
 
     handleUpload = e => {
+        //TODO: upload this.state.numOfMasks (int) as points, and this.state.checkBoxValue (boolean) indicates whether the "donated" box is checked (if the masks have already been donated, we should use that as like a points multipler)
+        //to help, this.props.name should store the current username, this.props.firebase should let you access firebase.
+        // this.props.points should theoretically count the current number of points, but i literally don't touch it at all so its probably best not to use it and instead use the database point counter entirely
+
+        //Below is image rendering, don't touch
+
         const image = this.state.image;
 
         const uploadTask = this.props.firebase.storage.ref(`images/${image.name}`).put(image); // uploads image to firebase
@@ -114,10 +123,17 @@ class Interactions extends React.Component {
         });
     } // please ignore code repetitions. IDK how react works and asynchronous calls, so I just called the original everywhere.
 
+    masksOnChange = event => {
+        this.setState({ numOfMasks: event.target.value });
+    };
+
+    toggleCheckboxValue = () => {
+        this.setState({checkBoxValue: !this.state.checkboxValue});
+    };
+
     render () { // file button and upload button
         //images temporarily display
-        //TODO: setState with updated this.state.photos pulled from remote
-
+        const { numOfMasks, checked } = this.state;
         console.log('rendered');
         return (
             <div>
@@ -127,7 +143,19 @@ class Interactions extends React.Component {
                         <input type= "file" onChange={this.handleChange}/>
                     </div>
                     <br />
-                    <progress value = {this.state.progress} max = "100"/> 
+                    {/* <progress value = {this.state.progress} max = "100"/>  */}
+                    <input
+                        className="masksinput"
+                        name="numOfMasks"
+                        value={numOfMasks}
+                        onChange={this.masksOnChange}
+                        type="text"
+                        placeholder=""
+                    />
+                    <div>
+                        <input className="checkboxinput" type="checkbox" id="checkBoxValue" name="checkBoxValue" onChange={this.toggleCheckboxValue}/>
+                        <label for="horns">Donated</label>
+                    </div>
                     <br />
                     <button onClick = {this.handleUpload}>Upload</button>
                     <br />
@@ -136,9 +164,8 @@ class Interactions extends React.Component {
                     <hr />
                     <br/>
                     {/* <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />  */}
-                    {/* TODO: How do we get a list of image links and display them?*/}
                     <center>Image Preview</center><br />
-                    {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" height = "300" width = "400" />)}
+                    {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" height = "300px" width = "400px" />)}
                     <br/>
                     
                 </center>

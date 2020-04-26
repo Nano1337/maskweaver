@@ -150,3 +150,14 @@ input.nicesubmit:hover {
   margin-bottom: 25px;
   cursor: pointer;
 }
+
+.checkboxinput {
+  max-width: 2em;
+}
+
+.masksinput {
+  height: 3em;
+  font-size: large;
+  max-width: 3em;
+  text-align: center;
+}
