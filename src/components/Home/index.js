@@ -39,8 +39,10 @@ class Home extends React.Component {
     render() {
         return (
             <div>
-                <h1>Home Page</h1>
-                <p>The Home Page is accessible by every signed in user.</p>
+                <div className="colorheader">
+                    <h1>Add Masks</h1>
+                </div>
+                
                 <Interactions name={this.state.username} photos={this.state.photos} firebase={this.props.firebase} points = {this.props.points}/>
             </div>
         );
@@ -64,9 +66,9 @@ class Interactions extends React.Component {
     }
 
     handleChange = e => {
-            const image = e.target.files[0];
-            this.setState({image});
-            console.log(this.state.username); // sets the state to include the current file upon adding one
+        const image = e.target.files[0];
+        this.setState({image});
+        console.log(this.state.username); // sets the state to include the current file upon adding one
     }
 
     handleUpload = e => {
@@ -95,12 +97,22 @@ class Interactions extends React.Component {
     render () { // file button and upload button
         return (
             <div>
-                <input type= "file" onChange={this.handleChange}/>
-                <button onClick = {this.handleUpload}>Upload</button>
-                <br/>
-                <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />
-                <br/>
-                <progress value = {this.state.progress} max = "100"/>
+                <center>
+                    <div class="upload-btn-wrapper">
+                        <button class="btn">Choose a photo</button>
+                        <input type= "file" onChange={this.handleChange}/>
+                    </div>
+                    <br />
+                    <button onClick = {this.handleUpload}>Upload</button>
+                    <br />
+                    {/* <progress value = {this.state.progress} max = "100"/> */ /* Don't really need a progress bar do we */}
+                    <br/><br/>
+                    <hr />
+                    <br/><br/>
+                    <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />
+                    <br/>
+                    
+                </center>
             </div>
         )
     }

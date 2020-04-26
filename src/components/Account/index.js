@@ -15,7 +15,7 @@ const AccountPage = () => (
                             <h3>{authUser.email}</h3>
                             <SignOutButton />
                     </div>   
-                    <br /><br /><hr /><br /><br />
+                    <br /><br /><hr /><br />
                     <center>
                         <div className="colorheader">
                             <h2>Change Password</h2>

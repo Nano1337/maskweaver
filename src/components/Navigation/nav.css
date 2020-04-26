@@ -4,7 +4,7 @@ ul.navbar {
     padding: 0;
     overflow: hidden;
     background-color: #A3968F;
-    height: 85px;
+    height: 75px;
     width: 100%;
     vertical-align: center;
     display: flex;
@@ -41,7 +41,7 @@ li a:hover {
 }
 
 img.navbar {
-    height: 5vh;
-    weight: 5vw;
+    height: 2em;
+    width: 2em;
 }
 
