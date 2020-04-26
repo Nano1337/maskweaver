@@ -161,3 +161,27 @@ input.nicesubmit:hover {
   max-width: 3em;
   text-align: center;
 }
+
+p.guide {
+  color: #5E5560;
+}
+
+ul.guide {
+  color: #5E5560;
+}
+
+li.guide {
+  color: #5E5560;
+}
+
+h1.guide {
+  margin-top: 3em;
+  color: #5E5560;
+  text-align: center;
+}
+
+h2.guide {
+  margin-top: 3em;
+  color: #5E5560;
+  text-align: center;
+}
