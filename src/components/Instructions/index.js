@@ -33,6 +33,7 @@ const styles = {
 const Instructions = () => (
     <div>
         {/*first section*/}
+        <br />
         <SwipeableViews>
             <div style={Object.assign({}, stylesfirst.slide, stylesfirst.slide1)}>
                 <div className='colorheader'>
