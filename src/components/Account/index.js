@@ -14,16 +14,15 @@ function AccountPage(props) {
             <AuthUserContext.Consumer>
                 {authUser => (
                     <div>
+                        <CopyToClipboard text={""} onCopy={() => window.location.reload()}>
+                                    <center>
+                                        <p>(Refresh &#8634;)</p>
+                                    </center>
+                        </CopyToClipboard>
                         <div className="colorheader">
                                 
-                                
+                                <h1>Account</h1>
 
-                                <CopyToClipboard text={authUser.uid} onCopy={() => window.location.reload()}>
-                                    <div>
-                                        <h1>Account</h1>
-                                        <p>(Refresh &#8634;)</p>
-                                    </div>
-                                </CopyToClipboard>
                                 <h3>{authUser.email}</h3>
                                 <h2>Points: {authUser.points}</h2>
                                 <CopyToClipboard text={authUser.uid} onCopy={() => setCopyMsg("Copied")}>

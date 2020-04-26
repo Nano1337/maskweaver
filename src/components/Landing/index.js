@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { withAuthorization } from '../Session';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class Landing extends React.Component {
     constructor(props) {
@@ -84,8 +85,27 @@ class Landing extends React.Component {
         const usr = JSON.parse(localStorage.getItem('authUser')); // user's personal data is stored in 'authUser'
         var username = Object.values(usr).slice()[6];
         
+        var betterList = [];
+        for (let i = 0; i<this.getFriends().slice().length; i++) {
+            if (!(this.getFriends().slice()[i].name==="")) {
+                betterList.push(this.getFriends().slice()[i]);
+            }
+        }
+        var msg = (<div />);
+        if (this.getFriends().slice().length===1) {
+            msg = (<p>You don't have any friends yet.</p>);
+        }
+        else if (betterList.length===0) {
+            msg = (<p>You don't have any friends yet.</p>);
+        }
+        
         return (
             <div>
+                <CopyToClipboard text={""} onCopy={() => window.location.reload()}>
+                    <center>
+                        <p><br />(Refresh &#8634;)</p>
+                    </center>
+                </CopyToClipboard>
                 <div className="colorheader">
                     <h1>Friends</h1>
                 </div>
@@ -108,6 +128,7 @@ class Landing extends React.Component {
                 <div className="colorheader">
                     <h2>Friend Activity</h2>
                 </div>
+                <div className="colorheader">{msg}</div>
                 {this.getFriends().slice().map(
                     friend =>
                     <Friend 
@@ -152,6 +173,10 @@ class NameForm extends React.Component {
 
 function Friend(props) {
     const usr = JSON.parse(localStorage.getItem('authUser')); // user's personal data is stored in 'authUser'
+
+    if (props.name==="") {
+        return (<div />);
+    }
 
     var msg = "";
     var diff = 0;
