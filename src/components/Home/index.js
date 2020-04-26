@@ -69,7 +69,7 @@ class Interactions extends React.Component {
     handleChange = e => {
         const image = e.target.files[0];
         this.setState({image});
-        console.log(this.state.username); // sets the state to include the current file upon adding one
+         // sets the state to include the current file upon adding one
     }
 
     handleUpload = e => {
@@ -88,7 +88,7 @@ class Interactions extends React.Component {
                 // get the uploaded image url back
 
                 const link = uploadTask.snapshot.ref.getDownloadURL().then( url => {
-                    console.log(url);
+
                     if (!(this.state.photos.includes(url))) {
                         var newArray = this.state.photos.slice();
                         newArray.push(url);
@@ -98,7 +98,7 @@ class Interactions extends React.Component {
                     }
                     const newPhotos = Object.values(JSON.parse(localStorage.getItem('authUser'))).slice()[2];
                     newPhotos.push(url); // adds the url of the photo to be associated with the user
-                    console.log(url);
+
                     if (!(this.state.photos.includes(url))) {
                         var newArray = this.state.photos.slice();
                         newArray.push(url);
@@ -110,6 +110,29 @@ class Interactions extends React.Component {
                     this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
                         photos: newPhotos.slice(),
                     });
+
+                    const uid = Object.values(usr).slice()[0];
+                    var arrPhotos; // code from here gets correct photo array
+                    this.props.firebase.users().on('value', snapshot => {
+                        const userObject = snapshot.val();
+                        const userList = Object.keys(userObject).map(key => ({
+                            ...userObject[key],
+                            uid: key,
+                        }));
+                        for ( var i = 0; i < userList.length; i++) {
+                            var curUser = userList[i];
+                            if ( curUser.uid === uid) {
+                                arrPhotos = curUser.photos;
+                            }
+
+                        }
+                        console.log(arrPhotos);
+                    });
+
+
+                    this.setState({
+                        photos: arrPhotos,
+                    });
                     this.render();
                 });
         });
@@ -118,11 +141,7 @@ class Interactions extends React.Component {
     render () { // file button and upload button
         //images temporarily display
         //TODO: setState with updated this.state.photos pulled from remote
-        const usr = JSON.parse(localStorage.getItem('authUser'));
-        const arrPhotos = Object.values(this.props.firebase.users().child(Object.values(usr).slice()[0]).photos); // stuff inside parenthesis is the direct value
-        this.setState({
-            photos: arrPhotos,
-        });
+
 
         return (
             <div>
@@ -142,7 +161,7 @@ class Interactions extends React.Component {
                     <br/><br/>
                     {/* <img src={this.state.url} alt = "Uploaded Images" height = "300" width = "400" />  */}
                     {/* TODO: How do we get a list of image links and display them?*/}
-                    {this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" height = "300" width = "400" />)}
+                    {(this.state.photos == null) ? (console.log("fuck this shit")) : this.state.photos.map(photo => <img src={photo} alt = "Uploaded Images" height = "300" width = "400" />)}
                     <br/>
                     
                 </center>
