@@ -7,8 +7,13 @@ import * as ROLES from '../../constants/roles';
 
 const SignUpPage = () => (
     <div>
-        <h1>SignUp</h1>
-        <SignUpForm />
+        <div className="colorheader">
+            <h1>Sign Up</h1>
+        </div>
+        <center>
+            <SignUpForm />
+        </center>
+        
     </div>
 );
 
@@ -31,9 +36,14 @@ class SignUpFormBase extends Component {
     onSubmit = event => {
         const { username, email, passwordOne, isAdmin } = this.state;
         const roles = [];
-
+        const friends = [""];
+        const points = 0;
+        const photos = [""];
         if (isAdmin) {
             roles.push(ROLES.ADMIN);
+        }
+        else {
+            roles.push(ROLES.USER);
         }
 
         this.props.firebase
@@ -46,6 +56,9 @@ class SignUpFormBase extends Component {
                         username,
                         email,
                         roles,
+                        friends,
+                        points,
+                        photos,
                     })
                     .then(() => {
                         this.setState({ ...INITIAL_STATE });
@@ -94,36 +107,37 @@ class SignUpFormBase extends Component {
                     onChange={this.onChange}
                     type="text"
                     placeholder="Full Name"
-                />
+                /><br />
                 <input
                     name="email"
                     value={email}
                     onChange={this.onChange}
                     type="text"
                     placeholder="Email Address"
-                />
+                /><br />
                 <input
                     name="passwordOne"
                     value={passwordOne}
                     onChange={this.onChange}
                     type="password"
                     placeholder="Password"
-                />
+                /><br />
                 <input
                     name="passwordTwo"
                     value={passwordTwo}
                     onChange={this.onChange}
                     type="password"
                     placeholder="Confirm Password"
-                />
+                /><br />
                 <label>
                     Admin:
                     <input
                         name="isAdmin"
                         type="checkbox"
+                        className="checkboxinput"
                         checked={isAdmin}
                         onChange={this.onChangeCheckbox}
-                    />
+                    /><br />
                 </label>
                 <button disabled={isInvalid} type="submit">
                     Sign Up

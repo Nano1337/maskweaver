@@ -20,34 +20,44 @@ const Navigation = () => (
 );
 
 const NavigationAuth = ({ authUser }) => (
-    <ul>
-        <li>
-            <Link to={ROUTES.LANDING}>
-                <img src={require('./img/plus.png')} alt="plus sign"/>
-            </Link>
+    <center>
+        <ul className="navbar">
+            <li className="navbar">
+                <Link to={ROUTES.HOME}>
+                    <img className="navbar" src={require('./img/icon1.png')} alt=""/>
+                </Link>
+            </li>
+            <li className="navbar">
+                <Link to={ROUTES.INSTRUCTIONS}>
+                    <img className="navbar" src={require('./img/icon2.png')} alt=""/>
+                </Link>
+            </li>
+            <li className="navbar">
+                <Link to={ROUTES.LANDING}>
+                    <img className="navbar" src={require('./img/icon3.png')} alt=""/>
+                </Link>
+            </li>
+            <li className="navbar">
+                <Link to={ROUTES.ACCOUNT}>
+                    <img className="navbar" src={require('./img/icon4.png')} alt=""/>
+                </Link>
+            </li>
 
-        </li>
-        <li>
-            <Link to={ROUTES.ACCOUNT}>
-                <img src={require('./img/info.png')}/>
-            </Link>
-        </li>
-        <li>
-            <Link to={ROUTES.HOME}>
-                <img src={require('./img/friend.svg')} alt="account"/>
-            </Link>
-        </li>
-        <li>
-            <Link to={ROUTES.ACCOUNT}>
-                <img src={require('./img/person.png')} alt="account"/>
-            </Link>
-        </li>
-
-    </ul>
+        </ul>
+    </center>
 );
 
 const NavigationNonAuth = () => (
-    <p>Sign Up Today!</p>
+    <center>
+        <ul className="navbar">
+            <li className="navbar">
+                <Link to={ROUTES.ACCOUNT}>
+                    <img className="navbar" src={require('./img/icon4.png')} alt=""/>
+                </Link>
+            </li>
+
+        </ul>
+    </center>
 );
 
 export default Navigation;

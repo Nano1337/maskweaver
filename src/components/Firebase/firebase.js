@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
 
 const config = {
     apiKey: "AIzaSyBsDkQalmIRHdE4saO2ZxoQSr0EW7gGyKQ",
@@ -19,6 +20,7 @@ class Firebase {
 
         this.auth = app.auth();
         this.db = app.database();
+        this.storage = app.storage(); //adds firebase storage reference
     }
 
     // *** Auth API ***
@@ -70,6 +72,10 @@ class Firebase {
     user = uid => this.db.ref(`users/${uid}`);
 
     users = () => this.db.ref('users');
+
+    challenge = cid => this.db.ref(`challenges/cid`);
+
+    challenges = () => this.db.ref('challenges');
 }
 
 export default Firebase;
