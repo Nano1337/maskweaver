@@ -118,7 +118,8 @@ class Interactions extends React.Component {
     render () { // file button and upload button
         //images temporarily display
         //TODO: setState with updated this.state.photos pulled from remote
-
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        const arrPhotos = Object.values(this.props.firebase.users().child(Object.values(usr).slice()[0]).photos); // stuff inside parenthesis is the direct value
         console.log('rendered');
         return (
             <div>
