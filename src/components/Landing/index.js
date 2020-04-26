@@ -20,19 +20,21 @@ class Landing extends React.Component {
     //     event.preventDefault();
     // }
 
-    addCourse = (nameOfCourse) => { //TODO: ACTUALLY ADD THE COURSE. this here is copied straight from modulus
-        var newCourses = this.state.arrCourses.slice();
+    addCourse = (nameOfCourse) => { //Writes correctly, albeit infinitely
+        const usr = JSON.parse(localStorage.getItem('authUser'));
+        var newCourses = Object.values(usr).slice()[2];
         newCourses.push(nameOfCourse);
+        console.log(newCourses);
         this.setState({
             arrCourses: newCourses.slice(),
-        }, () => {this.changeActiveCourse(nameOfCourse);});
-        const usr = JSON.parse(localStorage.getItem('authUser'));
+        });
+
         // console.log(Object.values(usr).slice()[2]);
         localStorage.setItem('authUser', JSON.stringify(usr));
         // console.log(Object.values(usr).slice()[2]);
-        this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
-            friends: newCourses.slice(),
-        });
+        // this.props.firebase.users().child(Object.values(usr).slice()[0]).update({
+        //     friends: newCourses.slice(),
+        // });
     }
 
     getFriends() { 
@@ -66,7 +68,7 @@ class Landing extends React.Component {
                         <br />
                         <input className = "nicesubmit" type="submit" value="Submit" />
                     </form> */}
-                    <NameForm addCourse={this.addCourse}/>
+                    <NameForm addCourse={this.addCourse} firebase = {this.props.firebase}/>
                 </center>
                 <hr />
                 <div className="colorheader">
@@ -99,31 +101,29 @@ class NameForm extends React.Component {
         let shouldAddCourse = false;
 
         //TODO: MAKE THIS LINE OF CODE, #102, GET A TOTAL ARRAY OF ALL UIDS IN THE DATABASE
-        var allCourses;
         this.props.firebase.users().on('value', snapshot => {
             const userObject = snapshot.val();
             const userList = Object.keys(userObject).map(key => ({
                 ...userObject[key],
                 uid: key,
             }));
+            localStorage.setItem('users', JSON.stringify(userList));
+            var allEntries = JSON.parse(localStorage.getItem('users'));
 
-            for (var i = 0; i < userList.length; i++) {
-                var curUser = userList[i];
-                allCourses.push(curUser.uid);
+            for (let i = 0, len = allEntries.length; i < len; ++i) {
+                var course = allEntries[i];
+                if (course.uid === this.state.value) {
+                    shouldAddCourse = true;
+                    console.log("yeah");
+                }
+            }
+
+            if (shouldAddCourse) {
+                this.props.addCourse(this.state.value);
+            } else {
+                alert('Sorry, ID not found');
             }
         });
-        for (let i = 0, len = allCourses.length; i < len; ++i) {
-            var course = allCourses[i];
-            if (course.uid === this.state.value) {
-                shouldAddCourse = true;
-            }
-        }
-
-        if (shouldAddCourse) {
-            this.props.addCourse(this.state.value);
-        } else {
-            alert('Sorry, ID not found');
-        }
         event.preventDefault();
     }
 
