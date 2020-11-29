@@ -137,3 +137,24 @@ a.whitelink {
 #logo:hover {
     background-color: black;
 }
+
+.introbox {
+    border: 2px solid white;
+    background-color: rgb(77, 71, 71);
+    width: 500px;
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 30px;
+}
+
+#copybutton {
+    background-color: whitesmoke;
+    color: black;
+    cursor: pointer;
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
+    transition: 0.5s;
+}
+
+#copybutton:hover {
+    background-color: lightgray;
+}

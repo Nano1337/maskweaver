@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 // import YouTube from 'react-youtube';
 import {useEffect, useState} from 'react';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
@@ -362,6 +363,12 @@ function CreateVideoPage() {
 
     function saveeverything(event) {
         event.preventDefault();
+
+        if (indexarray.length===0) {
+            alert("You didn't attach any links!");
+            return;
+        }
+
         setalldone(true);
         //compile stuff into computer data
         var masteryoutubelinkid = masterlink.substring(masterlink.length-11); //
@@ -441,8 +448,20 @@ function CreateVideoPage() {
     if (alldone) {
         return (
             <div class="createvideopage">
-                <h1>Here's your SyncPlay link:</h1>
-                <p>{finallink}</p>
+                <center>
+                    <br /><br /><br />
+                    <div className="introbox">
+                        <center>
+                            <h1>Here's your SyncPlay link!</h1>
+                            
+                            <p><a className="whitelink" target="_blank" href={finallink}>{finallink}</a></p>
+
+                            <CopyToClipboard text={finallink}>
+                                <p id="copybutton">Click to copy</p>
+                            </CopyToClipboard>
+                        </center>
+                    </div>
+                </center>
             </div>
         )
     } else {
@@ -454,21 +473,34 @@ function CreateVideoPage() {
         console.log(indexarray);
         return (
             <div class="createvideopage">
-                <center>
-                    <h1>Create a SyncPlay</h1>
-    
+                <center>                    
+
                     { mastersaved ?
                         <>
+                            <h1>Now Creating a SyncPlay</h1>
                             <h3>Master Video Link: </h3>
-                            <p><a className="whitelink" href={masterlink}>{masterlink}</a></p>
+                            <p><a className="whitelink" target="_blank" href={masterlink}>{masterlink}</a></p>
                         </>
                     :
-                        <form onSubmit={savemasterlink}>
-                            <label className="label">Enter the link to your "master" YouTube Video</label>
-                            <p className="descr">For reactors, this is your reaction video.</p>
-                            <input className="textinput" type="text" value={masterlink} onChange={(event) => setmasterlink(event.target.value)}/>
-                            <input className="savebutton" type="submit" value="Save" />
-                        </form>
+                        <>
+                            <h1>Welcome to SyncPlay</h1>
+                            <div className="introbox">
+                                SyncPlay lets you create a synchronous viewing experience that involves multiple YouTube videos playing in tandem. 
+                                Using SyncPlay, you can sync smaller clips to appear and reappear below your main video at specified times.
+                                <br /><br />
+                                This simple tool was created specifically for YouTube reaction channels to share reactions to YouTube videos without getting copyright striked. SyncPlay contributes to views on both the reactor's channel and the video being reacted to.
+                                <br />
+                            </div>
+                            <div className="introbox">
+                                <h2>Create a SyncPlay</h2>
+                                <form onSubmit={savemasterlink}>
+                                    <label className="label">Enter the link to your "master" YouTube Video</label>
+                                    <p className="descr">For reactors, this is your reaction video.</p>
+                                    <input className="textinput" type="text" value={masterlink} onChange={(event) => setmasterlink(event.target.value)}/>
+                                    <input className="savebutton" id="savebuttoninput"  type="submit" value="Save" />
+                                </form>
+                            </div>
+                        </>
                     }
                 </center>
     
@@ -481,7 +513,7 @@ function CreateVideoPage() {
                                 indexarray.map(
                                     index => (
                                         <div className="clipinfo">
-                                            <p><b>Clip Link: </b><a className="whitelink" href={arrayOfClipLinks[index]}> {arrayOfClipLinks[index]} </a></p>
+                                            <p><b>Clip Link: </b><a className="whitelink"  target="_blank" href={arrayOfClipLinks[index]}> {arrayOfClipLinks[index]} </a></p>
                                             <p><b>Master Start Time: </b> {arrayOfDelayStartTimes[index]}</p>
                                             <p><b>Master End Time: </b> {arrayOfDelayEndTimes[index]}</p>
                                             <p><b>Clip Start Time: </b> {arrayOfClipStartTimes[index]}</p>
@@ -499,14 +531,16 @@ function CreateVideoPage() {
                                     <p className="descr">For reactors, this is a video you're reacting to.</p>
                                     <input  className="textinput" type="text" value={cliplink} onChange={(event) => setcliplink(event.target.value)}/>
                                     <br /><br />
-                                    <label className="label">After how much time should the clip appear?</label><br />
+                                    <label className="label">At what time in the master video should the clip appear?</label><br />
+                                    <p className="descr">Format: MM:SS</p>
                                     <input  className="textinput" type="text" value={delaystarttime} onFocus={() => setdelaystarttime("")} onChange={(event) => changedelaystarttime(event)} />
                                     <br />
-                                    <label className="label">After how much time should the clip disappear?</label><br />
+                                    <label className="label">At what time in the master video should the clip disappear?</label><br />
+                                    <p className="descr">Format: MM:SS</p>
                                     <input  className="textinput" type="text" value={delayendtime} onFocus={() => setdelayendtime("")} onChange={(event) => changedelayendtime(event)} />
                                     <br />
-                                    <label className="label">At what timestamp within the clip should it begin playing? </label>
-                                    <p className="descr">(Normally 00:00 to start playing the clip from the beginning)</p>
+                                    <label className="label">From timestamp within the clip should the clip begin playing? </label>
+                                    <p className="descr">(Normally 00:00, to start playing the clip from the beginning)</p>
                                     <input  className="textinput" type="text" value={clipstarttime} onFocus={() => setclipstarttime("")} onChange={(event) => changeclipstarttime(event)} />
                                     <br />
                                     <input className="savebutton" id="savebuttoninput" type="submit" value="Save" />
@@ -515,6 +549,7 @@ function CreateVideoPage() {
                         </div>
                         
                         <center><button className="generatebutton" onClick={saveeverything}>Generate SyncPlay</button></center>
+                        <br /><br /><br />
                     </>
                     : <></> }
                 
