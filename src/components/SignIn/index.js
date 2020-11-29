@@ -9,6 +9,8 @@ import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
+import "./signin.css"
+
 // Hook
 
 function useWindowSize() {
@@ -72,50 +74,27 @@ function useWindowSize() {
   }
 
   function YouTube(props) {
-      var src = "https://www.youtube.com/embed/" + props.videoId + "?autoplay=1" + "&start=" + props.opts.playerVars.start + "&end=" + props.opts.playerVars.end;
+      var src = "https://www.youtube.com/embed/" + props.videoId + "?autoplay=1&rel=0&controls=0" + "&start=" + props.opts.playerVars.start + "&end=" + props.opts.playerVars.end;
       return (
-            <iframe id="ytplayer" type="text/html" width={props.opts.width} height={props.opts.height}
+        <center><iframe id="ytplayer" type="text/html" width={props.opts.width} height={props.opts.height}
             src={src}
-            frameborder="0"></iframe>
+            frameborder="0" allow="autoplay"></iframe></center>
       );
   }
-
-  function MasterYouTube(props) {
-    var src = "https://www.youtube.com/embed/" + props.videoId + "?autoplay=1";
-    return (
-          <iframe id="ytplayer" type="text/html" width={props.opts.width} height={props.opts.height}
-          src={src}
-          frameborder="0"></iframe>
-    );
-}
 
 function VideoTile(props) { 
 
     let opts;
-    if (props.mode===2) {
-        opts = {
-            height: ((parseInt(props.height))/2)+"",
-            width: ((parseInt(props.width))/2)+"",
-            playerVars: {
-                // https://developers.google.com/youtube/player_parameters
-                autoplay: 1,
-                start: props.start,
-                end: props.end,
-            },
-        };
-    } 
-    if (props.mode===1) {
-        opts = {
-            height: props.height+"",
-            width: props.width+"",
-            playerVars: {
-              // https://developers.google.com/youtube/player_parameters
-              autoplay: 1,
-              start: props.start,
-              end: props.end,
-            },
-        };
-    }
+    opts = {
+        height: ((parseInt(props.height))/2)+"",
+        width: ((parseInt(props.width))/2)+"",
+        playerVars: {
+            // https://developers.google.com/youtube/player_parameters
+            autoplay: 1,
+            start: props.start,
+            end: props.end,
+        },
+    };
 
     if (props.visible===true) {
         return (
@@ -132,142 +111,416 @@ function VideoTile(props) {
 
 function MasterVideoTile(props) {
 
-    var myConfObj = {
-        iframeMouseOver : false
-    }
-    window.addEventListener('blur',function(){
-    if(myConfObj.iframeMouseOver){
-        console.log('Wow! Iframe Click!');
-        props.clickedVid();
-    }
-    });
+    const [src, setsrc] = useState("https://www.youtube.com/embed/" + props.vidid + "?rel=0&controls=0");
     
-    function thing1() {
-        myConfObj.iframeMouseOver = true;
-    }
-    function thing2() {
-        myConfObj.iframeMouseOver = false;
+    // var myConfObj = {
+    //     iframeMouseOver : false
+    // }
+    // window.addEventListener('blur',function(){
+    // if(myConfObj.iframeMouseOver){
+    //     console.log('Wow! Iframe Click!');
+    //     props.clickedVid();
+    // }
+    // });
+    
+    // function thing1() {
+    //     myConfObj.iframeMouseOver = true;
+    // }
+    // function thing2() {
+    //     myConfObj.iframeMouseOver = false;
+    // }
+
+    //
+
+    function startVideo(event) {
+        setsrc(src + "&autoplay=1");
+        props.clickedVid();
+        event.preventDefault();
     }
 
     //
 
     let opts;
-    if (props.mode===2) {
-        opts = {
-            height: ((parseInt(props.height))/2)+"",
-            width: ((parseInt(props.width))/2)+"",
-            playerVars: {
-                // https://developers.google.com/youtube/player_parameters
-                autoplay: 1,
-                start: 0,
-                end: 0,
-            },
-        };
-    } 
-    if (props.mode===1) {
-        opts = {
-            height: props.height+"",
-            width: props.width+"",
-            playerVars: {
-              // https://developers.google.com/youtube/player_parameters
-              autoplay: 1,
-              start: 0,
-              end: 0,
-            },
-        };
-    }
+    opts = {
+        height: ((parseInt(props.height))/1.8)+"",
+        width: ((parseInt(props.width))/1.5)+"",
+        playerVars: {
+            // https://developers.google.com/youtube/player_parameters
+            autoplay: 1,
+            start: 0,
+            end: 0,
+        },
+    };
     
+    // <div class="videotile" id={props.vidid} onMouseOver={thing1} onMouseOut={thing2}>
     return (
-        <div class="videotile" id={props.vidid} onMouseOver={thing1} onMouseOut={thing2}>
-            <h2>Once you begin playing the video, you can't pause it (or the videos will get out of sync!)</h2>
-            <h5>{props.seconds}</h5>
-            <MasterYouTube videoId={props.vidid} opts={opts} />;
+        <div class="mastervideotile" id={props.vidid}>
+            {/* <h2>Once you begin playing the video, you can't pause it (or the videos will get out of sync!)</h2> */}
+            {/* <h5>{props.seconds}</h5> */}
+            {props.begun 
+            ? 
+            <> </>
+            : 
+            <center>
+                <button id="play-video" onClick={startVideo}>Begin</button>
+                <p class="notice">Don't Pause! (or videos will fail to sync)</p>
+            </center>}
+            <center><iframe id="ytplayer" type="text/html" width={opts.width} height={opts.height} src={src} frameborder="0" allow="autoplay"/></center>
         </div>
     )
 }
 
 function ViewVideoPage() {
     const size = useWindowSize();
-    const [mode, setMode] = useState(2); //1 indicates only 1 video playing, 2 indicates 2 videos playing
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(false);
+    const [formattedtime, setformattedtime] = useState("00:00");
+    const [begun, setbegun] = useState(false);
+
+    var sessionid = window.location.href.substring((window.location.href.indexOf("?")+4));
+
+    var masteryoutubelinkid = "k0EJ0Lk3dT8"; //temp fill
+    var arrayOfDelayStartSeconds = [15, 20]; //temp fill
+    var arrayOfDelayEndSeconds = [222, 275]; //temp fill
+    var arrayOfClipStartSeconds = [0, 7]; //temp fill
+    var arrayOfClipLinkIDs = ["-5q5mZbe3V8", "-5q5mZbe3V8"]; //temp fill
+    //note to self: clipend time is clipstart+delayend-delaystart, so no need to ask user for it or store it
+    //TODO: using sessionid
+    //  get master youtube link id
+    //  fill arrays: arrayOfDelayStartSeconds, arrayOfDelayEndSeconds, arrayOfClipStartSeconds, arrayOfClipLinkIDs. ( just pull the corresponding string from database and do string.split(",") )
 
     function toggle() {
         setIsActive(!isActive);
     }
 
-    var executed = false;
     function clickedVid() {
-        if (!executed) {
-            executed = true;
-            toggle();
+        toggle();
+        setbegun(true);
+    }
+
+    function updateTime() {
+        let mins = Math.floor((seconds+1)/60);
+        let secs = (seconds+1)%60;
+
+        if ((mins+"").length===1) {
+            mins = "0"+mins;
         }
+        if ((secs+"").length===1) {
+            secs = "0"+secs;
+        }
+
+        setformattedtime(mins + ":" + secs)
+
+        setSeconds(seconds => seconds + 1);
+    }
+
+    function pausetime(event) {
+        setIsActive(false);
+        setformattedtime("");
+        event.preventDefault();
+    }
+
+    function changetime(event) {
+        let userinput = event.target.value+"";
+         if (userinput.length===2) {
+            let newthing = userinput+=":";
+            setformattedtime(newthing);
+        } else if (userinput.length===5) {
+            let newseconds = parseInt(userinput.split(":")[1]) + (parseInt(userinput.split(":")[0])*60);
+            setSeconds(newseconds);
+            setbegun(true);
+            setIsActive(true);
+        } else {
+            setformattedtime(userinput);
+        }
+        event.preventDefault();
     }
 
     useEffect(() => {
         let interval = null;
         if (isActive) {
         interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
+            updateTime();
         }, 1000);
         } else if (!isActive && seconds !== 0) {
-        clearInterval(interval);
+            clearInterval(interval);
         }
         return () => clearInterval(interval);
     }, [isActive, seconds]);
-
-    var sessionid = window.location.href.substring((window.location.href.indexOf("?")+4));
-
-    var masteryoutubelinkid = "k0EJ0Lk3dT8"; //temp fill
-    var arrayOfDelayStartSeconds = [15, 250]; //temp fill
-    var arrayOfDelayEndSeconds = [222, 275]; //temp fill
-    var arrayOfClipStartSeconds = [0, 7]; //temp fill
-    var arrayOfClipLinkIDs = ["-5q5mZbe3V8", "-5q5mZbe3V8"]; //temp fill
-    //note to self: clipend time is clipstart+delayend-delaystart, so no need to ask user for it or store it
-    //TODO: GET YOUTUBELINK AND FILL ARRAYS FROM FIREBASE USING sessionid
 
     var indexarray = [];
     for (let i = 0, len = arrayOfClipLinkIDs.length; i < len; i++) {
         indexarray[i] = i;
     }
 
-    if (mode===1) {
-        return (
-            <MasterVideoTile clickedVid={clickedVid} seconds={seconds} mode={mode} vidid={masteryoutubelinkid} width={size.width} height={size.height} />
-        );
-    } else if (mode===2) {
-        return (
-            <div class="sidebyside">
-                <MasterVideoTile clickedVid={clickedVid} seconds={seconds} mode={mode} vidid={masteryoutubelinkid} width={size.width} height={size.height} />
-                {
-                    indexarray.map(
-                        index => (
-                            <VideoTile 
-                                mode={mode} 
-                                vidid={arrayOfClipLinkIDs[index]} 
-                                start={arrayOfClipStartSeconds[index]} 
-                                end={arrayOfClipStartSeconds[index] + arrayOfDelayEndSeconds[index] - arrayOfDelayStartSeconds[index]} 
-                                width={size.width / 2} 
-                                height={size.height / 2}
-                                visible={seconds >= arrayOfDelayStartSeconds[index] && seconds <= arrayOfDelayEndSeconds[index]}
-                            />
-                        )
+    // <form class="timeform">
+    //     <input type="text" value={formattedtime} onFocus={pausetime} onChange={changetime}/>
+    // </form>
+    return (
+        <div class="viewvideopage">
+            {begun 
+            ?
+            <center><h2 className="time">{formattedtime}</h2></center>
+            :
+            <> </>}
+            <MasterVideoTile clickedVid={clickedVid} begun={begun} seconds={seconds} vidid={masteryoutubelinkid} width={size.width} height={size.height} />
+            <div class="rowofvids">
+            {
+                indexarray.map(
+                    index => (
+                        <VideoTile 
+                            vidid={arrayOfClipLinkIDs[index]} 
+                            start={arrayOfClipStartSeconds[index]} 
+                            end={arrayOfClipStartSeconds[index] + arrayOfDelayEndSeconds[index] - arrayOfDelayStartSeconds[index]} 
+                            width={size.width / 2} 
+                            height={size.height / 2}
+                            visible={seconds >= arrayOfDelayStartSeconds[index] && seconds <= arrayOfDelayEndSeconds[index]}
+                        />
                     )
-                }
+                )
+            }
             </div>
-        );
-    } else {
-        return (
-            <h1>Something went really wrong. Refresh the page!</h1>
-        );
-    }
+        </div>
+    );
 }
 
 
 function CreateVideoPage() {
-    return (
-        <h1>Create Video Page</h1>
-    );
+    const [alldone, setalldone] = useState(false);
+    const [finallink, setfinallink] = useState("");
+
+    const [mastersaved, setmastersaved] = useState(false);
+    const [masterlink, setmasterlink] = useState("");
+
+    const [cliplink, setcliplink] = useState("");
+    const [delaystarttime, setdelaystarttime] = useState("00:00");
+    const [delayendtime, setdelayendtime] = useState("00:00");
+    const [clipstarttime, setclipstarttime] = useState("00:00");
+
+    const [indexarray, setindexarray] = useState([]);
+    const [arrayOfClipLinks, setarrayOfClipLinks] = useState([]);
+    const [arrayOfDelayStartTimes, setarrayOfDelayStartTimes] = useState([]);
+    const [arrayOfDelayEndTimes, setarrayOfDelayEndTimes] = useState([]);
+    const [arrayOfClipStartTimes, setarrayOfClipStartTimes] = useState([]);
+
+    //
+
+    function savemasterlink(event) {
+        event.preventDefault();
+        if (!(masterlink.includes("youtube") || masterlink.includes("youtu.be"))) {
+            alert('Not a YouTube link!')
+        } else {
+            setmastersaved(true);
+        }
+    }
+
+    function saveclip(event) {
+        event.preventDefault();
+
+        if (!(cliplink.includes("youtube") || cliplink.includes("youtu.be"))) {
+            alert('Not a YouTube link!')
+        } else {
+        
+            let newarray = [];
+            var newarrayOfClipLinks = [];
+            var newarrayOfDelayStartTimes = []; 
+            var newarrayOfDelayEndTimes = []; 
+            var newarrayOfClipStartTimes = []; 
+            
+            for (let i = 0, len = arrayOfClipLinks.length; i < len; i++) {
+                newarrayOfClipLinks.push(arrayOfClipLinks[i]);
+                newarrayOfDelayStartTimes.push(arrayOfDelayStartTimes[i]);
+                newarrayOfDelayEndTimes.push(arrayOfDelayEndTimes[i]);
+                newarrayOfClipStartTimes.push(arrayOfClipStartTimes[i]);
+            }
+            newarrayOfClipLinks.push(cliplink);
+            newarrayOfDelayStartTimes.push(delaystarttime);
+            newarrayOfDelayEndTimes.push(delayendtime);
+            newarrayOfClipStartTimes.push(clipstarttime);
+            for (let i = 0, len = newarrayOfClipLinks.length; i < len; i++) {
+                newarray.push(i);
+            }
+
+            console.log(newarrayOfClipLinks);
+            console.log(newarrayOfDelayStartTimes);
+            console.log(newarrayOfDelayEndTimes);
+            console.log(newarrayOfClipStartTimes);
+            console.log(newarray);
+            setarrayOfClipLinks(newarrayOfClipLinks);
+            setarrayOfDelayStartTimes(newarrayOfDelayStartTimes);
+            setarrayOfDelayEndTimes(newarrayOfDelayEndTimes);
+            setarrayOfClipStartTimes(newarrayOfClipStartTimes);
+            setindexarray(newarray);
+
+            setcliplink("");
+            setdelaystarttime("00:00");
+            setdelayendtime("00:00");
+            setclipstarttime("00:00");
+
+        }
+    }
+
+    function saveeverything(event) {
+        event.preventDefault();
+        setalldone(true);
+        //compile stuff into computer data
+        var masteryoutubelinkid = masterlink.substring(masterlink.length-11); //
+        var stringOfDelayStartSeconds = ""; //
+        for (let i = 0, len = arrayOfDelayStartTimes.length; i < len; i++) {
+            stringOfDelayStartSeconds+=((parseInt(arrayOfDelayStartTimes[i].split(":")[0])*60) + (parseInt(arrayOfDelayStartTimes[i].split(":")[1])));
+            if (i<len-1) {
+                stringOfDelayStartSeconds+=","
+            }
+        }
+        var stringOfDelayEndSeconds = ""; //
+        for (let i = 0, len = arrayOfDelayEndTimes.length; i < len; i++) {
+            stringOfDelayEndSeconds+=((parseInt(arrayOfDelayEndTimes[i].split(":")[0])*60) + (parseInt(arrayOfDelayEndTimes[i].split(":")[1])));
+            if (i<len-1) {
+                stringOfDelayEndSeconds+=","
+            }
+        }
+        var stringOfClipStartSeconds = ""; //
+        for (let i = 0, len = arrayOfClipStartTimes.length; i < len; i++) {
+            stringOfClipStartSeconds+=((parseInt(arrayOfClipStartTimes[i].split(":")[0])*60) + (parseInt(arrayOfClipStartTimes[i].split(":")[1])));
+            if (i<len-1) {
+                stringOfClipStartSeconds+=","
+            }
+        }
+        var stringOfClipLinkIDs = ""; //
+        for (let i = 0, len = arrayOfClipLinks.length; i < len; i++) {
+            stringOfClipLinkIDs+=arrayOfClipLinks[i].substring(arrayOfClipLinks[i].length-11);
+            if (i<len-1) {
+                stringOfClipLinkIDs+=","
+            }
+        }
+
+        var theirid = Date.now();
+
+        //TODO: upload the following to firebase in this db structure
+    //     [theirid]
+	//          -> mainyt: [masteryoutubelinkid]
+	//          -> DelayStartSeconds: [stringOfDelayStartSeconds]
+    //          -> DelayEndSeconds: [stringOfDelayEndSeconds]
+    //          -> ClipStartSeconds: [stringOfClipStartSeconds]
+    //          -> ClipLinkIDs: [stringOfClipLinkIDs]
+    
+        setfinallink(window.location.href + "?id=" + theirid);
+    }
+
+    function changedelaystarttime(event) {
+        let userinput = event.target.value+"";
+        if (userinput.length===2) {
+            let newthing = userinput+=":";
+            setdelaystarttime(newthing);
+        } else {
+            setdelaystarttime(userinput);
+        }
+        event.preventDefault();
+    }
+    function changedelayendtime(event) {
+        let userinput = event.target.value+"";
+        if (userinput.length===2) {
+            let newthing = userinput+=":";
+            setdelayendtime(newthing);
+        } else {
+            setdelayendtime(userinput);
+        }
+        event.preventDefault();
+    }
+    function changeclipstarttime(event) {
+        let userinput = event.target.value+"";
+        if (userinput.length===2) {
+            let newthing = userinput+=":";
+            setclipstarttime(newthing);
+        } else {
+            setclipstarttime(userinput);
+        }
+        event.preventDefault();
+    }
+
+    if (alldone) {
+        return (
+            <div class="createvideopage">
+                <h1>Here's your SyncPlay link:</h1>
+                <p>{finallink}</p>
+            </div>
+        )
+    } else {
+        console.log('rendered!');
+        console.log(arrayOfClipLinks);
+        console.log(arrayOfDelayStartTimes);
+        console.log(arrayOfDelayEndTimes);
+        console.log(arrayOfClipStartTimes);
+        console.log(indexarray);
+        return (
+            <div class="createvideopage">
+                <center>
+                    <h1>Create a SyncPlay</h1>
+    
+                    { mastersaved ?
+                        <>
+                            <h3>Master Video Link: </h3>
+                            <p><a className="whitelink" href={masterlink}>{masterlink}</a></p>
+                        </>
+                    :
+                        <form onSubmit={savemasterlink}>
+                            <label className="label">Enter the link to your "master" YouTube Video</label>
+                            <p className="descr">For reactors, this is your reaction video.</p>
+                            <input className="textinput" type="text" value={masterlink} onChange={(event) => setmasterlink(event.target.value)}/>
+                            <input className="savebutton" type="submit" value="Save" />
+                        </form>
+                    }
+                </center>
+    
+                    { mastersaved ?
+                    <>
+                        <div className="bisplit">
+                            <div className="leftcolumn">
+                            {indexarray.length===0 ? <><p>No synced clips yet.</p></> : <></>}
+                            {
+                                indexarray.map(
+                                    index => (
+                                        <div className="clipinfo">
+                                            <p><b>Clip Link: </b><a className="whitelink" href={arrayOfClipLinks[index]}> {arrayOfClipLinks[index]} </a></p>
+                                            <p><b>Master Start Time: </b> {arrayOfDelayStartTimes[index]}</p>
+                                            <p><b>Master End Time: </b> {arrayOfDelayEndTimes[index]}</p>
+                                            <p><b>Clip Start Time: </b> {arrayOfClipStartTimes[index]}</p>
+                                        </div>
+                                    )
+                                )
+                            }
+                            </div>
+
+                            <div className="divider" />
+
+                            <div className="rightcolumn">
+                                <form onSubmit={saveclip}>
+                                    <label className="label">Enter the link for a clip to sync up</label>
+                                    <p className="descr">For reactors, this is a video you're reacting to.</p>
+                                    <input  className="textinput" type="text" value={cliplink} onChange={(event) => setcliplink(event.target.value)}/>
+                                    <br /><br />
+                                    <label className="label">After how much time should the clip appear?</label><br />
+                                    <input  className="textinput" type="text" value={delaystarttime} onFocus={() => setdelaystarttime("")} onChange={(event) => changedelaystarttime(event)} />
+                                    <br />
+                                    <label className="label">After how much time should the clip disappear?</label><br />
+                                    <input  className="textinput" type="text" value={delayendtime} onFocus={() => setdelayendtime("")} onChange={(event) => changedelayendtime(event)} />
+                                    <br />
+                                    <label className="label">At what timestamp within the clip should it begin playing? </label>
+                                    <p className="descr">(Normally 00:00 to start playing the clip from the beginning)</p>
+                                    <input  className="textinput" type="text" value={clipstarttime} onFocus={() => setclipstarttime("")} onChange={(event) => changeclipstarttime(event)} />
+                                    <br />
+                                    <input className="savebutton" id="savebuttoninput" type="submit" value="Save" />
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <center><button className="generatebutton" onClick={saveeverything}>Generate SyncPlay</button></center>
+                    </>
+                    : <></> }
+                
+            </div>
+        );
+    }
 }
 
 function SignInPage() {

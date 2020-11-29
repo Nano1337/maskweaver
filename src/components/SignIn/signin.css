@@ -1,0 +1,139 @@
+#play-video {
+    background-color: whitesmoke;
+    color: black;
+    font-size: large;
+    transition: 0.5s;
+    outline: none;
+    margin: 0 0 0 0;
+    border-radius: 0 0 0 0;
+}
+
+#play-video:hover {
+    background-color: lightgray;
+    border: none;
+    border-radius: 0 0 0 0;
+}
+
+.viewvideopage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgb(37, 34, 34);
+    min-height: 100vh;
+}
+
+.mastervideotile {
+}
+
+.rowofvids {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.notice {
+    color: white;
+    margin-bottom: 25px;
+}
+
+.time {
+    color: white;
+}
+
+.createvideopage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: rgb(37, 34, 34);
+    min-height: 100vh;
+    color: whitesmoke;
+}
+
+.label {
+    font-size: medium;
+}
+
+.descr {
+    font-size: small;
+    margin: none;
+    padding: none;
+}
+
+.savebutton {
+    width: 100px;
+}
+
+.generatebutton {
+    background-color: whitesmoke;
+    color: black;
+    transition: 0.5s;
+    max-width: fit-content;
+    border-radius: 0 0 0 0;
+}
+
+.generatebutton:hover {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    border-radius: 0 0 0 0;
+}
+
+input {
+    outline: none;
+}
+
+a.whitelink {
+    color: white;
+}
+
+.bisplit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-top: 2px solid lightgray;
+    border-bottom: 2px solid lightgray;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.leftcolumn {
+    padding: 10px 25px 25px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50vw;
+}
+
+.rightcolumn {
+    padding: 25px 25px 25px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50vw;
+}
+
+.divider {
+    border-left: lightgray 2px solid;
+}
+
+#savebuttoninput {
+    max-width: 100px;
+    transition: 0.5s;
+    color: black;
+    border-bottom: none;
+}
+
+#savebuttoninput:hover {
+    background-color: lightgray;
+    
+}
+
+#logo {
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+#logo:hover {
+    background-color: black;
+}

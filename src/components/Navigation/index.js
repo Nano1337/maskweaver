@@ -47,17 +47,15 @@ const NavigationAuth = ({ authUser }) => (
     </center>
 );
 
-const NavigationNonAuth = () => (
-    <center>
-        {/* <ul className="navbar">
-            <li className="navbar">
-                <Link to={ROUTES.ACCOUNT}>
-                    <img className="navbar" src={require('./img/icon4.png')} alt=""/>
-                </Link>
-            </li>
-
-        </ul> */}
-    </center>
-);
+function NavigationNonAuth() {
+    let home = window.location.href.substring(0, (window.location.href.lastIndexOf("/")));
+    return (
+        <center>
+            <ul className="navbar">
+                <li class="logo"><a id="logo" href={home}>SyncPlayer</a></li>
+            </ul>
+        </center>
+    );    
+}
 
 export default Navigation;
