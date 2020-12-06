@@ -190,6 +190,7 @@ function ViewVideoPage(props) {
     //  get master youtube link id
     //  fill arrays: arrayOfDelayStartSeconds, arrayOfDelayEndSeconds, arrayOfClipStartSeconds, arrayOfClipLinkIDs. ( just pull the corresponding string from database and do string.split(",") )
 
+    // TODO: This is async, the variables only get assigned after it retrieves the data
     props.firebase.challenge(sessionid).on('value', snapshot => {
         const items = snapshot.val();
         masteryoutubelinkid = items.mainyt;
@@ -266,6 +267,8 @@ function ViewVideoPage(props) {
     // <form class="timeform">
     //     <input type="text" value={formattedtime} onFocus={pausetime} onChange={changetime}/>
     // </form>
+
+    //TODO: stuff here is just meant to return a temporary screen when it's loading. However since it's not refreshing or anything it just stays on "loading"
     if (masteryoutubelinkid == "") {
         //display a loading screen
         // window.setTimeout(this.render, 2000);
@@ -434,7 +437,7 @@ function CreateVideoPage(props) {
             [theirid] : data,
         })
 
-        //TODO: upload the following to firebase in this db structure
+        // DONE
     //     [theirid]
 	//          -> mainyt: [masteryoutubelinkid]
 	//          -> DelayStartSeconds: [stringOfDelayStartSeconds]
