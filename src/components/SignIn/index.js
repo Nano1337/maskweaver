@@ -180,24 +180,40 @@ function ViewVideoPage(props) {
 
     var sessionid = window.location.href.substring((window.location.href.indexOf("?")+4));
 
-    var masteryoutubelinkid = ""; //temp fill
-    var arrayOfDelayStartSeconds = []; //temp fill
-    var arrayOfDelayEndSeconds = []; //temp fill
-    var arrayOfClipStartSeconds = []; //temp fill
-    var arrayOfClipLinkIDs = []; //temp fill
+    // var masteryoutubelinkid = ""; //temp fill
+    const [masteryoutubelinkid, setmasteryoutubelinkid] = useState("");
+    // var arrayOfDelayStartSeconds = []; //temp fill
+    const [arrayOfDelayStartSeconds, setarrayOfDelayStartSeconds] = useState([]);
+    // var arrayOfDelayEndSeconds = []; //temp fill
+    const [arrayOfDelayEndSeconds, setarrayOfDelayEndSeconds] = useState([]);
+    // var arrayOfClipStartSeconds = []; //temp fill
+    const [arrayOfClipStartSeconds, setarrayOfClipStartSeconds] = useState([]);
+    // var arrayOfClipLinkIDs = []; //temp fill   
+    const [arrayOfClipLinkIDs, setarrayOfClipLinkIDs] = useState([]);
     //note to self: clipend time is clipstart+delayend-delaystart, so no need to ask user for it or store it
-    //TODO: using sessionid
+    //DONE: using sessionid
     //  get master youtube link id
     //  fill arrays: arrayOfDelayStartSeconds, arrayOfDelayEndSeconds, arrayOfClipStartSeconds, arrayOfClipLinkIDs. ( just pull the corresponding string from database and do string.split(",") )
 
-    // TODO: This is async, the variables only get assigned after it retrieves the data
     props.firebase.challenge(sessionid).on('value', snapshot => {
-        const items = snapshot.val();
-        masteryoutubelinkid = items.mainyt;
-        arrayOfClipStartSeconds = items.ClipStartSeconds.split(',');
-        arrayOfDelayStartSeconds = items.DelayStartSeconds.split(',');
-        arrayOfDelayEndSeconds = items.DelayEndSeconds.split(',');
-        arrayOfClipLinkIDs = items.ClipLinkIDs.split(',');
+        let items = snapshot.val();
+        if (masteryoutubelinkid != items.mainyt) {
+            setmasteryoutubelinkid(items.mainyt);
+            
+            // arrayOfClipStartSeconds = items.ClipStartSeconds.split(',');
+            // arrayOfDelayStartSeconds = items.DelayStartSeconds.split(',');
+            // arrayOfDelayEndSeconds = items.DelayEndSeconds.split(',');
+            // arrayOfClipLinkIDs = items.ClipLinkIDs.split(',');
+            setarrayOfClipStartSeconds(items.ClipStartSeconds.split(','));
+            setarrayOfDelayStartSeconds(items.DelayStartSeconds.split(','));
+            setarrayOfDelayEndSeconds(items.DelayEndSeconds.split(','));
+            setarrayOfClipLinkIDs(items.ClipLinkIDs.split(','));
+
+            console.log(arrayOfClipStartSeconds);
+            console.log(arrayOfDelayStartSeconds);
+            console.log(arrayOfDelayEndSeconds);
+            console.log(arrayOfClipLinkIDs);
+        }
     })    
 
     function toggle() {
@@ -225,27 +241,27 @@ function ViewVideoPage(props) {
         setSeconds(seconds => seconds + 1);
     }
 
-    function pausetime(event) {
-        setIsActive(false);
-        setformattedtime("");
-        event.preventDefault();
-    }
+    // function pausetime(event) {
+    //     setIsActive(false);
+    //     setformattedtime("");
+    //     event.preventDefault();
+    // }
 
-    function changetime(event) {
-        let userinput = event.target.value+"";
-         if (userinput.length===2) {
-            let newthing = userinput+=":";
-            setformattedtime(newthing);
-        } else if (userinput.length===5) {
-            let newseconds = parseInt(userinput.split(":")[1]) + (parseInt(userinput.split(":")[0])*60);
-            setSeconds(newseconds);
-            setbegun(true);
-            setIsActive(true);
-        } else {
-            setformattedtime(userinput);
-        }
-        event.preventDefault();
-    }
+    // function changetime(event) {
+    //     let userinput = event.target.value+"";
+    //      if (userinput.length===2) {
+    //         let newthing = userinput+=":";
+    //         setformattedtime(newthing);
+    //     } else if (userinput.length===5) {
+    //         let newseconds = parseInt(userinput.split(":")[1]) + (parseInt(userinput.split(":")[0])*60);
+    //         setSeconds(newseconds);
+    //         setbegun(true);
+    //         setIsActive(true);
+    //     } else {
+    //         setformattedtime(userinput);
+    //     }
+    //     event.preventDefault();
+    // }
 
     useEffect(() => {
         let interval = null;
@@ -268,7 +284,6 @@ function ViewVideoPage(props) {
     //     <input type="text" value={formattedtime} onFocus={pausetime} onChange={changetime}/>
     // </form>
 
-    //TODO: stuff here is just meant to return a temporary screen when it's loading. However since it's not refreshing or anything it just stays on "loading"
     if (masteryoutubelinkid == "") {
         //display a loading screen
         // window.setTimeout(this.render, 2000);
@@ -280,7 +295,7 @@ function ViewVideoPage(props) {
         );
         //set a timer to re-render the screen in 2 seconds            
     }
-    else
+    else {
         return (
             <div class="viewvideopage">
                 {begun 
@@ -307,6 +322,7 @@ function ViewVideoPage(props) {
                 </div>
             </div>
         );
+    }
 }
 
 
